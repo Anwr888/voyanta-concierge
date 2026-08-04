@@ -8,7 +8,7 @@ export function Logo({ variant = "dark", className = "" }: { variant?: "dark" | 
 
   return (
     <Link href="/" className={`inline-flex items-center gap-2.5 shrink-0 ${className}`} aria-label="Voyanta Concierge home">
-      <Image src={src} alt="Voyanta Concierge" width={40} height={40} className="h-9 w-9 sm:h-10 sm:w-10 object-contain" priority />
+      <Image src={src} alt="Voyanta Concierge" width={44} height={44} className="h-10 w-10 sm:h-11 sm:w-11 object-contain" priority />
       <span
         className={`font-display text-lg sm:text-xl tracking-wide leading-none ${
           variant === "dark" ? "text-navy-900" : "text-white"
