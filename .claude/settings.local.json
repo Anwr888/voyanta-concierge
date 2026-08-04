@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(ffmpeg -version)",
+      "Bash(magick -version)",
+      "Bash(npm ping *)",
+      "Read(//c/Users/anwar/OneDrive/Desktop/**)",
+      "Bash(npx --yes create-next-app@latest voyanta-app-tmp --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(mkdir -p media-source public/images public/video)",
+      "Bash(mv \"Back of Bahamar View.mp4\" \"Bahamar V.mp4\" \"Cruise Terminal and Atlants.mp4\" \"Fort Charlotte Fort V1.mp4\" \"Fort Charlotte Fort V2.mp4\" \"Fort Charlotte V1.mp4\" \"Nassau Bahamas Cruise Terminal V.mp4\" \"Ocean View 1.mp4\" \"Ocean View 2.mp4\" \"Princess Margaret Hospital V.mp4\" media-source/)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const sharp=require\\('sharp'\\); console.log\\('sharp ok', sharp.versions\\);\")",
+      "Bash(node scripts/process-images.mjs)",
+      "Bash(node -e \"console.log\\(require\\('@ffmpeg-installer/ffmpeg'\\).path\\)\")",
+      "Bash(curl -s \"http://localhost:3000/cruise/planner/results?cruiseLine=Royal+Caribbean+International&ship=Voyager+of+the+Seas&dockingTime=09:00&allAboardTime=16:30&adults=2&children=0&budget=moderate&interests=Beaches,Sightseeing\")",
+      "Bash(curl -s \"http://localhost:3000/cruise/planner/results?cruiseLine=Royal+Caribbean+International&ship=Voyager+of+the+Seas&dockingTime=09:00&allAboardTime=16:30&adults=2&children=0&budget=moderate&interests=Beaches,Sightseeing\" -o /tmp/cruise_results.html)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/cruise2.html -w \"%{http_code} %{time_total}s\\\\n\" \"http://localhost:3000/cruise/planner/results?cruiseLine=Royal+Caribbean+International&ship=Voyager+of+the+Seas&dockingTime=09:00&allAboardTime=16:30&adults=2&children=0&budget=moderate&interests=Beaches,Sightseeing\")",
+      "Bash(node -e ' *)",
+      "Bash(npm run *)",
+      "Bash(curl -s \"http://localhost:3000/cruise/packages\")",
+      "Bash(curl -s \"http://localhost:3000/cruise\")",
+      "Bash(node -e \"const {icons}=require\\('lucide-react'\\); console.log\\('SlidersHorizontal', !!icons.SlidersHorizontal, 'Search', !!icons.Search, 'Filter', !!icons.Filter\\);\")",
+      "Bash(node -e \"const {icons}=require\\('lucide-react'\\); console.log\\('GripVertical', !!icons.GripVertical, 'Share2', !!icons.Share2, 'Copy', !!icons.Copy, 'Link2', !!icons.Link2\\);\")",
+      "Bash(node -e \"const {icons}=require\\('lucide-react'\\); console.log\\('Compass', !!icons.Compass, 'Mail', !!icons.Mail, 'Phone', !!icons.Phone, 'MessageSquare', !!icons.MessageSquare, 'CalendarDays', !!icons.CalendarDays, 'Vote', !!icons.Vote, 'Wallet2', !!icons.Wallet2, 'CircleDollarSign', !!icons.CircleDollarSign, 'UserPlus', !!icons.UserPlus\\);\")",
+      "Bash(node -e \"const {icons}=require\\('lucide-react'\\); console.log\\('Send', !!icons.Send, 'ListChecks', !!icons.ListChecks\\);\")",
+      "Bash(curl -s \"http://localhost:3000/cruise/planner\")",
+      "Bash(curl -s \"http://localhost:3000/about\" -o /tmp/about.html)",
+      "Bash(npm view *)",
+      "Bash(git config *)",
+      "Bash(where git-credential-manager *)",
+      "Bash(where git-credential-manager-core *)",
+      "Read(//c/Users/anwar/**)"
+    ]
+  }
+}

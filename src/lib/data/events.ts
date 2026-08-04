@@ -1,0 +1,116 @@
+import { VoyantaEvent } from "@/lib/types";
+
+// Sample events calendar. Bahamian public holidays and cultural festivals are
+// real and recurring; specific 2026/2027 dates and descriptions here are
+// illustrative sample content for demonstration purposes.
+
+export const events: VoyantaEvent[] = [
+  {
+    id: "e1",
+    title: "Fox Hill Day Festival",
+    category: "Cultural Event",
+    island: "New Providence (Nassau)",
+    location: "Fox Hill, Nassau",
+    startDate: "2026-08-11",
+    description:
+      "An annual celebration in the historic Fox Hill community marking Emancipation with music, food stalls, and a parade.",
+    image: "/images/nassau-city-aerial-2.jpg",
+  },
+  {
+    id: "e2",
+    title: "Nassau Fish Fry Music Night",
+    category: "Concert",
+    island: "New Providence (Nassau)",
+    location: "Arawak Cay, Nassau",
+    startDate: "2026-08-22",
+    description: "A weekly evening of live Rake-and-Scrape music alongside Arawak Cay's seafood vendors.",
+    image: "/images/nassau-oceanfront-1.jpg",
+  },
+  {
+    id: "e3",
+    title: "Bahamas Independence Regatta",
+    category: "Sporting Event",
+    island: "Exuma",
+    location: "Elizabeth Harbour, Exuma",
+    startDate: "2026-09-05",
+    endDate: "2026-09-07",
+    description: "Traditional Bahamian sloop sailing races drawing crews from across the Family Islands.",
+    image: "/images/nassau-oceanfront-1.jpg",
+  },
+  {
+    id: "e4",
+    title: "Downtown Nassau Farmers Market",
+    category: "Farmers Market",
+    island: "New Providence (Nassau)",
+    location: "Rawson Square, Nassau",
+    startDate: "2026-09-12",
+    description: "A Saturday-morning market featuring local produce, preserves, and handmade goods.",
+    image: "/images/nassau-city-aerial-1.jpg",
+  },
+  {
+    id: "e5",
+    title: "National Heroes Day Celebration",
+    category: "Holiday Celebration",
+    island: "New Providence (Nassau)",
+    location: "Downtown Nassau",
+    startDate: "2026-10-12",
+    description: "A public holiday honoring Bahamian national heroes with ceremonies and community events downtown.",
+    image: "/images/nassau-city-aerial-2.jpg",
+  },
+  {
+    id: "e6",
+    title: "Great Exuma Sailing Regatta",
+    category: "Sporting Event",
+    island: "Exuma",
+    location: "George Town, Exuma",
+    startDate: "2026-11-14",
+    endDate: "2026-11-16",
+    description: "A multi-day sailing regatta and shoreside festival in George Town.",
+    image: "/images/nassau-oceanfront-1.jpg",
+  },
+  {
+    id: "e7",
+    title: "Junkanoo Boxing Day Parade",
+    category: "Festival",
+    island: "New Providence (Nassau)",
+    location: "Bay Street, Nassau",
+    startDate: "2026-12-26",
+    description:
+      "The Bahamas' signature cultural festival — costumed groups parade down Bay Street before dawn with drums, cowbells, and brass.",
+    image: "/images/nassau-cruise-terminal-1.jpg",
+  },
+  {
+    id: "e8",
+    title: "Junkanoo New Year's Parade",
+    category: "Festival",
+    island: "New Providence (Nassau)",
+    location: "Bay Street, Nassau",
+    startDate: "2027-01-01",
+    description: "The second of Nassau's two major Junkanoo parades, held on New Year's morning.",
+    image: "/images/nassau-cruise-terminal-2.jpg",
+  },
+  {
+    id: "e9",
+    title: "Bahamas International Film Festival",
+    category: "Cultural Event",
+    island: "New Providence (Nassau)",
+    location: "Downtown Nassau",
+    startDate: "2027-01-20",
+    endDate: "2027-01-25",
+    description: "A week of screenings and panels spotlighting Caribbean and international independent film.",
+    image: "/images/baha-mar-resort-1.jpg",
+  },
+  {
+    id: "e10",
+    title: "Bahamas Carnival",
+    category: "Festival",
+    island: "New Providence (Nassau)",
+    location: "Clifford Park, Nassau",
+    startDate: "2027-05-08",
+    endDate: "2027-05-10",
+    description: "A multi-day music and costume festival featuring soca, road parades, and live performances.",
+    image: "/images/baha-mar-resort-2.jpg",
+  },
+];
+
+export const getEvent = (id: string) => events.find((e) => e.id === id);

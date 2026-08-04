@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  /* Navy — anchor / headers / primary text on light */
+  --color-navy-950: #08152a;
+  --color-navy-900: #0d2140;
+  --color-navy-800: #14304f;
+  --color-navy-700: #1c4368;
+  --color-navy-600: #2a5a86;
+
+  /* Gold — sun, warmth, primary accent */
+  --color-gold-600: #ad7e34;
+  --color-gold-500: #c69a4e;
+  --color-gold-400: #d7b571;
+  --color-gold-300: #e6cd9a;
+
+  /* Teal — water, secondary accent */
+  --color-teal-600: #157b7a;
+  --color-teal-500: #1fa3a0;
+  --color-teal-400: #4cc0bb;
+  --color-teal-300: #8fdcd6;
+
+  /* Sand — warm neutral background, not stark white */
+  --color-sand-50: #fbf8f2;
+  --color-sand-100: #f5efe2;
+  --color-sand-200: #ece2cd;
+
+  --color-ink: #10233d;
+  --color-ink-soft: #3c5170;
+}
+
+@theme inline {
+  --color-navy-950: var(--color-navy-950);
+  --color-navy-900: var(--color-navy-900);
+  --color-navy-800: var(--color-navy-800);
+  --color-navy-700: var(--color-navy-700);
+  --color-navy-600: var(--color-navy-600);
+
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-300: var(--color-gold-300);
+
+  --color-teal-600: var(--color-teal-600);
+  --color-teal-500: var(--color-teal-500);
+  --color-teal-400: var(--color-teal-400);
+  --color-teal-300: var(--color-teal-300);
+
+  --color-sand-50: var(--color-sand-50);
+  --color-sand-100: var(--color-sand-100);
+  --color-sand-200: var(--color-sand-200);
+
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-sand-50);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: var(--color-gold-300);
+  color: var(--color-navy-950);
+}
+
+@layer components {
+  .input {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(16 35 61 / 0.15);
+    padding: 0.65rem 1rem;
+    font-size: 0.875rem;
+  }
+  .input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(16 35 61 / 0.3);
+  }
+}
+
+/* Signature eyebrow label — echoes the wordmark's tracked gold "CONCIERGE" line */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold-600);
+}
+
+.eyebrow-on-dark {
+  color: var(--color-gold-400);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Leaflet's default .leaflet-div-icon adds a white box + border — our pins
+   are already fully-formed SVGs, so strip that back out. */
+.voyanta-pin {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

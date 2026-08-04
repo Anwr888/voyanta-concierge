@@ -1,0 +1,801 @@
+Understood. I’ll keep **everything from your original project brief**, change nothing from it, and only **add the cruise passenger section we developed** so it becomes one complete document you can save and later give to Claude AI.
+
+# Project Brief – Bahamas Vacation Planning & Concierge Platform
+
+## Project Vision
+
+Create the premier online platform for planning vacations to The Bahamas.
+
+The platform should allow travelers to plan every aspect of their trip in one place—from accommodations and airport transportation to excursions, restaurants, and local experiences.
+
+Rather than functioning as a traditional travel agency, the platform should position itself as a *Bahamas Vacation Concierge*, providing personalized recommendations, itinerary planning, and access to trusted local businesses.
+
+Our goal is to become the first website travelers think of when planning a trip to The Bahamas.
+
+---
+
+# Mission
+
+Help travelers experience the very best of The Bahamas while making vacation planning simple, enjoyable, and stress-free.
+
+Provide authentic local recommendations and trusted service providers, all in one platform.
+
+---
+
+# Initial Market
+
+Primary customers:
+
+* United States
+* Canada
+* United Kingdom
+
+Future expansion:
+
+* Europe
+* Caribbean travelers
+* Cruise passengers
+
+---
+
+# Customer Journey
+
+A visitor lands on the homepage.
+
+Instead of immediately searching for hotels, they answer a few simple questions.
+
+Examples:
+
+* Which island are you visiting?
+* When are you traveling?
+* How many people?
+* Adults?
+* Children?
+* Budget?
+* What type of vacation?
+
+Examples:
+
+* Family
+* Romantic
+* Luxury
+* Adventure
+* Relaxation
+* Bachelor/Bachelorette
+* Wedding
+* Fishing
+* Diving
+
+The platform then builds a personalized vacation plan.
+
+---
+
+# Cruise Passenger Experience
+
+The platform should also provide a dedicated planning experience for cruise passengers visiting The Bahamas.
+
+Cruise passengers have different needs from traditional vacation travelers because they may only have several hours available to explore the island before returning to their ship.
+
+The platform should help cruise passengers find activities and experiences that reasonably fit within their available time in port.
+
+Cruise passengers should be able to enter:
+
+* Cruise line
+* Cruise ship
+* Arrival date
+* Estimated docking time
+* Ship departure or all-aboard time
+* Number of travelers
+* Adults
+* Children
+* Budget
+* Interests
+
+Examples of cruise passenger interests:
+
+* Beaches
+* Water activities
+* Food
+* Shopping
+* Sightseeing
+* History and culture
+* Adventure
+* Family activities
+* Luxury experiences
+* Relaxation
+
+The platform should then recommend experiences based on the amount of time the passenger has available.
+
+---
+
+# Cruise Day Planner
+
+The Cruise Day Planner should build a personalized itinerary specifically around the passenger's available port time.
+
+Cruise itineraries should not fill every available hour.
+
+Additional time should intentionally be left available for:
+
+* Transportation
+* Walking
+* Meeting local providers
+* Possible delays
+* Returning to the cruise port
+* Boarding the ship
+
+For example, if a cruise passenger has approximately four hours available, the platform may recommend approximately two to three hours of planned activities instead of scheduling activities for the entire four-hour period.
+
+Cruise experiences could be organized into categories such as:
+
+* Under 3 Hours
+* 3–4 Hours
+* 4–6 Hours
+* 6+ Hours
+
+Passengers with shorter port visits should primarily be shown activities located closer to the cruise port.
+
+Passengers with longer port visits can receive a wider selection of recommendations.
+
+---
+
+# Cruise Packages
+
+The platform should offer curated cruise-day packages in addition to individual activities.
+
+Examples:
+
+## Nassau Highlights
+
+A short sightseeing experience featuring popular Nassau attractions, Bahamian culture, historical locations, and shopping.
+
+## Beach Escape
+
+Transportation to a recommended beach with time to relax, swim, eat, and return toward the cruise port.
+
+## Taste of The Bahamas
+
+A food-focused experience featuring authentic Bahamian restaurants, local dishes, desserts, and cultural food stops.
+
+## Adventure Day
+
+Activities such as:
+
+* Jet skiing
+* Snorkeling
+* Parasailing
+* ATV experiences
+* Water activities
+* Other available excursions
+
+## Family Cruise Day
+
+A combination of:
+
+* Kid-friendly attractions
+* Beaches
+* Restaurants
+* Sightseeing
+* Family activities
+
+## Luxury Cruise Day
+
+Premium experiences such as:
+
+* Luxury transportation
+* Upscale beach experiences
+* Resort experiences
+* Private excursions
+* Fine dining
+* Yacht experiences
+
+Cruise packages should clearly display:
+
+* Estimated duration
+* Activities included
+* Transportation information
+* Meeting location
+* Recommended amount of available port time
+* Provider information
+
+---
+
+# Recommended Cruise Return Buffer
+
+The platform should help cruise passengers plan conservatively.
+
+Instead of scheduling activities until the ship's departure or all-aboard time, the platform should create a recommended activity window that ends earlier.
+
+Example:
+
+Ship docking time:
+
+9:00 AM
+
+Ship all-aboard time:
+
+4:30 PM
+
+Recommended experience window:
+
+Approximately 10:00 AM–2:30 PM
+
+This gives the traveler additional time to return toward the cruise port.
+
+The exact recommended time may vary depending on:
+
+* Activity
+* Location
+* Distance from the cruise port
+* Transportation requirements
+* Traffic
+* Provider
+* Other circumstances
+
+The purpose of this feature is to help travelers make better scheduling decisions rather than guarantee that they will return to their cruise ship by a specific time.
+
+---
+
+# Independent Local Providers
+
+During the initial stages of the platform, many cruise activities, tours, transportation services, excursions, and other experiences will be provided by independent local Bahamian businesses.
+
+The platform should act as the planning, discovery, and concierge platform connecting travelers with trusted local businesses.
+
+Voyanta Concierge should not represent itself as directly operating services that are actually being provided by independent businesses.
+
+Cruise activity listings should clearly display information such as:
+
+* Estimated duration
+* Location
+* Estimated distance or travel time from the cruise port
+* Meeting location
+* Transportation included or not included
+* Recommended amount of available port time
+* Provider information
+* What's included
+* What's not included
+* Requirements
+* Cancellation policy
+
+---
+
+# Cruise Passenger Return Disclaimer
+
+The platform should NOT guarantee that cruise passengers will return to their ship by a specific time.
+
+Because transportation, tours, excursions, and activities may be operated by independent local businesses, actual experience durations and transportation times may vary.
+
+Cruise passengers remain responsible for knowing their cruise ship's official all-aboard and departure times and ensuring they return to the ship on time.
+
+The platform's responsibility is to help travelers select activities that reasonably fit within their available time and encourage appropriate scheduling buffers.
+
+---
+
+# Cruise Activity Filtering
+
+Cruise recommendations should consider:
+
+* Available port time
+* Activity duration
+* Distance from the cruise port
+* Estimated transportation time
+* Location
+* Traveler interests
+* Group size
+* Budget
+* Age requirements
+* Family friendliness
+* Availability
+
+Activities that clearly require more time than the passenger has available should not be recommended.
+
+---
+
+# Future Cruise Features
+
+Future cruise-focused features may include:
+
+* Live cruise ship schedules
+* Automatic cruise ship detection
+* Port-specific recommendations
+* Real-time activity availability
+* Cruise-day notifications
+* Digital cruise itineraries
+* Provider messaging
+* Transportation coordination
+* Live itinerary updates
+* Multiple activities combined into one cruise-day plan
+
+In the future, the platform may also develop dedicated tour guides, drivers, transportation, or directly managed experiences.
+
+Until those services are directly controlled by the platform, guaranteed return-to-ship times should not be offered.
+
+---
+
+# Personalized Vacation Planner
+
+The system should generate suggested itineraries.
+
+Example:
+
+## Five Days in Nassau
+
+Day 1
+
+* Airport pickup
+* Hotel check-in
+* Dinner reservation
+* Sunset walk
+
+Day 2
+
+* Swimming Pigs excursion
+* Local lunch
+* Beach afternoon
+
+Day 3
+
+* Jet skiing
+* Fish Fry
+* Casino
+
+Day 4
+
+* Blue Lagoon
+* Shopping
+* Private chef dinner
+
+Day 5
+
+* Beach morning
+* Airport transfer
+
+Users should be able to edit every activity.
+
+---
+
+# Marketplace
+
+Local businesses create profiles.
+
+Categories include:
+
+Accommodation
+
+* Hotels
+* Resorts
+* Vacation rentals
+* Villas
+
+Transportation
+
+* Airport transfers
+* Private drivers
+* Rental cars
+* Golf carts
+
+Water Activities
+
+* Boat charters
+* Fishing charters
+* Snorkeling
+* Scuba diving
+* Swimming pigs
+* Jet skiing
+* Parasailing
+* Paddleboarding
+
+Tours
+
+* Island tours
+* Food tours
+* Historical tours
+* Nature tours
+* ATV tours
+
+Food
+
+* Restaurants
+* Private chefs
+* Catering
+* Grocery delivery
+
+Events
+
+* Weddings
+* Event planners
+* DJs
+* Photographers
+* Decorators
+
+Wellness
+
+* Massage therapists
+* Yoga
+* Personal trainers
+* Spa services
+
+Family Services
+
+* Babysitting
+* Childcare
+
+Luxury Services
+
+* Yacht charters
+* Luxury transportation
+* Concierge services
+
+Shopping
+
+* Souvenirs
+* Local artisans
+
+Nightlife
+
+* Bars
+* Clubs
+* Live music
+
+---
+
+# Business Profiles
+
+Each business should have:
+
+* Photos
+* Description
+* Contact information
+* Website
+* Pricing
+* Reviews
+* Rating
+* Availability
+* Location map
+* Social media links
+
+Future:
+
+* Direct online booking
+
+---
+
+# Search
+
+Users should be able to search by:
+
+Island
+
+Category
+
+Price
+
+Rating
+
+Distance
+
+Family-friendly
+
+Luxury
+
+Outdoor
+
+Water activities
+
+Kid-friendly
+
+Pet-friendly
+
+Accessible
+
+---
+
+# Interactive Map
+
+Display businesses on a map.
+
+Allow filtering by category.
+
+Example:
+
+Show only:
+
+* Beaches
+* Restaurants
+* Excursions
+* Hotels
+
+---
+
+# AI Vacation Planner (Future Feature)
+
+Users answer several questions.
+
+Example:
+
+"I have four days in Nassau with two children and a $3,500 budget."
+
+The system generates:
+
+* Complete itinerary
+* Estimated costs
+* Restaurant suggestions
+* Excursions
+* Travel tips
+* Packing suggestions
+
+---
+
+# Trip Builder
+
+Users can:
+
+Save activities
+
+Drag and drop activities into each day
+
+Estimate trip costs
+
+Share itineraries
+
+Print itineraries
+
+Download PDFs
+
+---
+
+# Group Planning
+
+Users can invite friends.
+
+Everyone can:
+
+Vote on activities
+
+Split expenses
+
+Suggest restaurants
+
+Coordinate schedules
+
+Track payments
+
+Perfect for:
+
+Bachelor trips
+
+Family reunions
+
+Destination weddings
+
+Group vacations
+
+Corporate retreats
+
+---
+
+# User Accounts
+
+Users can:
+
+Save favorite businesses
+
+Save itineraries
+
+Book services (future)
+
+Leave reviews
+
+Upload vacation photos
+
+Receive recommendations
+
+---
+
+# Local Recommendations
+
+Dedicated sections for:
+
+Best Beaches
+
+Best Restaurants
+
+Best Hidden Gems
+
+Rainy Day Activities
+
+Family Activities
+
+Free Things to Do
+
+Nightlife
+
+Shopping
+
+Local Food
+
+Island Guides
+
+Travel Tips
+
+Safety Tips
+
+Transportation Tips
+
+Packing Lists
+
+---
+
+# Events Calendar
+
+Display:
+
+Festivals
+
+Concerts
+
+Sporting events
+
+Cultural events
+
+Holiday celebrations
+
+Farmers markets
+
+Cruise ship schedules (future)
+
+---
+
+# Admin Dashboard
+
+Administrator should manage:
+
+Businesses
+
+Users
+
+Reviews
+
+Featured listings
+
+Advertisements
+
+Analytics
+
+Payments
+
+Categories
+
+Content management
+
+---
+
+# Monetization
+
+## Booking Commission
+
+Receive commission from:
+
+Hotels
+
+Tours
+
+Excursions
+
+Transportation
+
+Boat charters
+
+Vacation rentals
+
+---
+
+## Featured Listings
+
+Businesses pay to appear higher in search results.
+
+---
+
+## Advertising
+
+Banner ads
+
+Sponsored businesses
+
+Homepage promotions
+
+Seasonal promotions
+
+---
+
+## Concierge Services
+
+Premium vacation planning.
+
+Travel consultation.
+
+Custom itinerary planning.
+
+VIP planning.
+
+---
+
+## Subscription Plans (Businesses)
+
+Basic
+
+Free listing
+
+Standard
+
+Enhanced profile
+
+Premium
+
+Featured placement
+
+Additional marketing tools
+
+Analytics
+
+Lead management
+
+---
+
+# Future Integrations
+
+Flights
+
+Travel insurance
+
+Rental cars
+
+Cruise bookings
+
+Restaurant reservations
+
+Google Maps
+
+Weather
+
+Currency converter
+
+Translation
+
+Chat support
+
+---
+
+# Design Direction
+
+The platform should feel:
+
+Modern
+
+Premium
+
+Bright
+
+Professional
+
+Easy to use
+
+Visually showcase The Bahamas with high-quality photography, island colors, beaches, crystal-clear water, and a clean user experience.
+
+Avoid making the website feel cluttered.
+
+Focus on inspiring travelers while making planning effortless.
+
+---
+
+# Long-Term Vision
+
+The long-term goal is to become the largest digital tourism marketplace dedicated to The Bahamas.
+
+Travelers should be able to plan an entire vacation from one website.
+
+Local businesses should gain exposure to thousands of visitors.
+
+The platform should become the trusted destination for discovering authentic Bahamian experiences while generating recurring revenue through bookings, advertising, featured listings, subscriptions, and concierge services.
+
+The experience should make travelers feel excited about visiting The Bahamas while providing local businesses with an easy way to reach customers from around the world.
