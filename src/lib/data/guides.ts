@@ -67,7 +67,7 @@ export const guides: GuideArticle[] = [
     category: "Best Hidden Gems",
     island: "New Providence (Nassau)",
     excerpt: "Beyond Bay Street — the spots most visitors miss.",
-    heroImage: "/images/fort-charlotte-aerial-1.jpg",
+    heroImage: "/images/fort-charlotte-1.jpg",
     readMinutes: 4,
     sections: [
       {

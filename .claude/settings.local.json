@@ -31,7 +31,15 @@
       "Bash(git config *)",
       "Bash(where git-credential-manager *)",
       "Bash(where git-credential-manager-core *)",
-      "Read(//c/Users/anwar/**)"
+      "Read(//c/Users/anwar/**)",
+      "Bash(magick identify *)",
+      "Bash(find \"/c/Users/anwar/OneDrive/Desktop\" -maxdepth 2 -type f \\\\\\( -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.svg\" -o -iname \"*.ai\" -o -iname \"*.eps\" -o -iname \"*.pdf\" \\\\\\) 2>/dev/null | grep -v \"node_modules\")",
+      "Bash(node _dechroma.mjs)",
+      "Bash(curl -s \"http://localhost:3000/_next/image?url=%2Fimages%2Fbrand%2Fvoyanta-logo-light-bg.png&w=96&q=75\" -o /tmp/optimized-check.png)",
+      "Bash(cd \\\\\"/c/Users/anwar/OneDrive/Desktop/Voyanta Concierge\\\\\")",
+      "Bash(mkdir -p /c/Users/anwar/AppData/Local/Temp/claude/C--Users-anwar-OneDrive-Desktop-Voyanta-Concierge/6f668f40-ab4c-4792-961e-354eef6cfd99/scratchpad)",
+      "Bash(curl -sv 'http://localhost:3000/_next/image?url=%2Fimages%2Fbrand%2Fvoyanta-logo-light-bg.png&w=96&q=75' -o /c/Users/anwar/AppData/Local/Temp/claude/C--Users-anwar-OneDrive-Desktop-Voyanta-Concierge/6f668f40-ab4c-4792-961e-354eef6cfd99/scratchpad/optimized-check.png)",
+      "Bash(cp /c/Users/anwar/AppData/Local/Temp/claude/C--Users-anwar-OneDrive-Desktop-Voyanta-Concierge/6f668f40-ab4c-4792-961e-354eef6cfd99/scratchpad/optimized-check.png '/c/Users/anwar/OneDrive/Desktop/Voyanta Concierge/_optcheck.png')"
     ]
   }
 }
