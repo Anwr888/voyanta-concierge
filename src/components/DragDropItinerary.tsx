@@ -1,29 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { ItineraryDay, ItineraryActivity } from "@/lib/types";
+import { ItineraryDay, ItineraryActivity, Business, MarketplaceCategoryId } from "@/lib/types";
 import { Icon } from "@/components/Icon";
 import { newActivityId } from "@/lib/itinerary";
+import { categories } from "@/lib/data/categories";
+import { MarketplacePickerPanel } from "@/components/trip-builder/MarketplacePickerPanel";
 
 interface DragRef {
   dayIdx: number;
   actIdx: number;
 }
 
-const categoryOptions = [
-  "Transportation",
-  "Accommodation",
-  "Food",
-  "Water Activities",
-  "Tours",
-  "Beaches",
-  "Shopping",
-  "Nightlife",
-  "Wellness",
-  "Events",
-  "Sightseeing",
-  "Relaxation",
-];
+interface PickerTarget {
+  dayIdx: number;
+  actIdx: number;
+}
+
+// Legacy activities (from itinerary templates) only ever stored a free-text
+// category label. This finds the real Marketplace category behind that
+// label so existing rows still show a sensible selection in the dropdown
+// below, without needing to migrate any stored trip data.
+function legacyCategoryId(label: string): MarketplaceCategoryId | "" {
+  return categories.find((c) => c.name === label)?.id ?? "";
+}
 
 export function DragDropItinerary({
   days,
@@ -34,6 +34,7 @@ export function DragDropItinerary({
 }) {
   const [dragging, setDragging] = useState<DragRef | null>(null);
   const [overDay, setOverDay] = useState<number | null>(null);
+  const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
 
   function moveActivity(from: DragRef, toDayIdx: number, toActIdx: number | null) {
     const next = days.map((d) => ({ ...d, activities: [...d.activities] }));
@@ -55,6 +56,23 @@ export function DragDropItinerary({
       i !== dayIdx ? d : { ...d, activities: d.activities.map((a, j) => (j !== actIdx ? a : { ...a, ...patch })) }
     );
     onChange(next);
+  }
+
+  // The category pill is the starting point for replacing this exact
+  // day/time slot with a real Marketplace experience: clicking it opens the
+  // picker panel scoped to this one activity, and choosing a business here
+  // writes that business straight into the row (title, description, and
+  // both the human-readable category label and its Marketplace category id).
+  function handleBusinessSelect(business: Business) {
+    if (!pickerTarget) return;
+    updateActivity(pickerTarget.dayIdx, pickerTarget.actIdx, {
+      title: business.name,
+      description: business.shortDescription,
+      category: categories.find((c) => c.id === business.category)?.name ?? business.category,
+      marketplaceCategoryId: business.category,
+      marketplaceListingId: business.slug,
+    });
+    setPickerTarget(null);
   }
 
   function removeActivity(dayIdx: number, actIdx: number) {
@@ -95,6 +113,9 @@ export function DragDropItinerary({
   function updateDayTitle(dayIdx: number, title: string) {
     onChange(days.map((d, i) => (i !== dayIdx ? d : { ...d, title })));
   }
+
+  const pickerDay = pickerTarget ? days[pickerTarget.dayIdx] : undefined;
+  const pickerActivity = pickerTarget ? pickerDay?.activities[pickerTarget.actIdx] : undefined;
 
   return (
     <div className="space-y-6">
@@ -180,17 +201,15 @@ export function DragDropItinerary({
                     className="mt-1 w-full resize-none bg-transparent text-sm text-ink-soft focus:outline-none focus:ring-1 focus:ring-navy-900/20 rounded px-1 -mx-1"
                     aria-label="Activity description"
                   />
-                  <select
-                    value={act.category}
-                    onChange={(e) => updateActivity(dayIdx, actIdx, { category: e.target.value })}
-                    className="mt-1.5 rounded-full bg-teal-500/10 px-2.5 py-1 text-[11px] font-semibold text-teal-700 focus:outline-none"
+                  <button
+                    type="button"
+                    onClick={() => setPickerTarget({ dayIdx, actIdx })}
+                    aria-label="Choose a category and Marketplace experience for this activity"
+                    className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-teal-500/10 px-2.5 py-1 text-[11px] font-semibold text-teal-700 hover:bg-teal-500/20 transition-colors"
                   >
-                    {categoryOptions.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
+                    {act.category || "Choose a category…"}
+                    <Icon name="ChevronRight" size={11} />
+                  </button>
                 </div>
 
                 <button
@@ -227,6 +246,16 @@ export function DragDropItinerary({
         <Icon name="Plus" size={15} />
         Add another day
       </button>
+
+      <MarketplacePickerPanel
+        open={pickerTarget !== null}
+        slotLabel={pickerDay && pickerActivity ? `Day ${pickerDay.day} · ${pickerActivity.time}` : ""}
+        initialCategoryId={
+          pickerActivity ? pickerActivity.marketplaceCategoryId ?? legacyCategoryId(pickerActivity.category) : ""
+        }
+        onClose={() => setPickerTarget(null)}
+        onSelect={handleBusinessSelect}
+      />
     </div>
   );
 }
