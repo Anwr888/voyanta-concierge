@@ -32,10 +32,10 @@ export function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-[4.5rem] items-center justify-between py-2.5">
-          <Logo variant="dark" />
+        <div className="flex h-[4.5rem] items-center justify-between py-2.5 lg:grid lg:grid-cols-3">
+          <Logo variant="dark" className="lg:justify-self-start" />
 
-          <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
+          <nav className="hidden lg:flex lg:justify-self-center items-center gap-1" aria-label="Primary">
             {primaryNav.map((group) =>
               group.links ? (
                 <div key={group.label} className="relative group">
@@ -73,15 +73,15 @@ export function Header() {
                 </Link>
               )
             )}
-          </nav>
-
-          <div className="hidden lg:flex items-center gap-2">
             <Link
               href="/list-your-business"
               className="px-3.5 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors"
             >
               List Your Business
             </Link>
+          </nav>
+
+          <div className="hidden lg:flex lg:justify-self-end items-center gap-2">
             <Link
               href="/account"
               aria-label="Account"
