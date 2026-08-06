@@ -8,6 +8,7 @@ import { LocationPanel } from "@/components/LocationPanel";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { getBusiness, businesses } from "@/lib/data/businesses";
 import { getCategory } from "@/lib/data/categories";
+import { formatDistanceFromPort, formatDurationMinutes } from "@/lib/format";
 
 export function generateStaticParams() {
   return businesses.map((b) => ({ slug: b.slug }));
@@ -47,6 +48,12 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
             {business.featured && (
               <span className="rounded-full bg-gold-300/30 px-2.5 py-1 text-[11px] font-bold tracking-wide text-gold-600 uppercase">Featured</span>
             )}
+            {business.verified && (
+              <span className="flex items-center gap-1 rounded-full bg-teal-500/10 px-2.5 py-1 text-[11px] font-bold tracking-wide text-teal-700 uppercase">
+                <Icon name="CircleCheck" size={12} />
+                Verified business
+              </span>
+            )}
             <span className="rounded-full bg-navy-900/5 px-2.5 py-1 text-[11px] font-semibold text-navy-800">{business.subcategory}</span>
           </div>
           <div className="mt-2 flex items-start justify-between gap-3">
@@ -57,11 +64,23 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
             <span className="flex items-center gap-1">
               <Icon name="MapPin" size={14} /> {business.area}, {business.island}
             </span>
-            <span className="flex items-center gap-1.5">
-              <RatingStars rating={business.rating} />
-              {business.rating.toFixed(1)} ({business.reviewCount} reviews)
-            </span>
-            <PriceLevel level={business.priceLevel} />
+            {business.rating !== undefined ? (
+              <span className="flex items-center gap-1.5">
+                <RatingStars rating={business.rating} />
+                {business.rating.toFixed(1)} ({business.reviewCount} reviews)
+              </span>
+            ) : business.reviewLinks ? (
+              <span className="flex items-center gap-1 font-medium text-teal-700">
+                See real reviews below
+              </span>
+            ) : (
+              <span className="text-ink-soft/60">Reviews unavailable</span>
+            )}
+            {business.priceLevel !== undefined ? (
+              <PriceLevel level={business.priceLevel} />
+            ) : (
+              <span className="text-ink-soft/60">Price range not published</span>
+            )}
           </div>
 
           <p className="mt-6 text-ink-soft leading-relaxed">{business.description}</p>
@@ -131,18 +150,54 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
 
           <section className="mt-10">
             <h3 className="font-display text-lg text-navy-900">Reviews</h3>
-            <div className="mt-4 space-y-4">
-              {business.reviews.map((r) => (
-                <div key={r.author + r.date} className="rounded-xl border border-navy-900/8 p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-navy-900">{r.author}</p>
-                    <RatingStars rating={r.rating} size={12} />
+            {business.reviews ? (
+              <div className="mt-4 space-y-4">
+                {business.reviews.map((r) => (
+                  <div key={r.author + r.date} className="rounded-xl border border-navy-900/8 p-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold text-navy-900">{r.author}</p>
+                      <RatingStars rating={r.rating} size={12} />
+                    </div>
+                    <p className="mt-1.5 text-sm text-ink-soft">{r.text}</p>
+                    <p className="mt-1.5 text-xs text-ink-soft/60">{r.date}</p>
                   </div>
-                  <p className="mt-1.5 text-sm text-ink-soft">{r.text}</p>
-                  <p className="mt-1.5 text-xs text-ink-soft/60">{r.date}</p>
+                ))}
+              </div>
+            ) : business.reviewLinks ? (
+              <div className="mt-4 rounded-xl border border-navy-900/8 bg-sand-50 p-4">
+                <p className="text-sm text-ink-soft leading-relaxed">
+                  Voyanta doesn&apos;t display a rating or review count for {business.name} — it isn&apos;t
+                  something we can keep accurate or verified on our end. See real, current reviews directly
+                  from the source:
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {business.reviewLinks.google && (
+                    <a
+                      href={business.reviewLinks.google}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-navy-900/15 bg-white px-3.5 py-2 text-xs font-semibold text-navy-800 hover:bg-sand-100 transition-colors"
+                    >
+                      See reviews on Google
+                      <Icon name="ArrowUpRight" size={12} />
+                    </a>
+                  )}
+                  {business.reviewLinks.tripadvisor && (
+                    <a
+                      href={business.reviewLinks.tripadvisor}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-navy-900/15 bg-white px-3.5 py-2 text-xs font-semibold text-navy-800 hover:bg-sand-100 transition-colors"
+                    >
+                      See reviews on Tripadvisor
+                      <Icon name="ArrowUpRight" size={12} />
+                    </a>
+                  )}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-ink-soft/60">No review information available.</p>
+            )}
           </section>
         </div>
 
@@ -150,29 +205,56 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
           <div className="rounded-2xl border border-navy-900/10 bg-white p-5 sticky top-24">
             <h3 className="font-display text-lg text-navy-900">Contact</h3>
             <ul className="mt-4 space-y-3 text-sm">
-              <li className="flex items-center gap-2 text-navy-800">
-                <Icon name="Clock" size={15} className="text-navy-700 shrink-0" /> {business.hours}
+              <li className="flex items-start gap-2 text-navy-800">
+                <Icon name="Clock" size={15} className="mt-0.5 text-navy-700 shrink-0" /> {business.hours}
               </li>
               <li className="flex items-center gap-2 text-navy-800">
-                <Icon name="Info" size={15} className="text-navy-700 shrink-0" /> {business.phone}
+                <Icon name="Info" size={15} className="text-navy-700 shrink-0" />
+                {business.phone ?? "Phone not publicly listed"}
               </li>
-              {business.distanceFromCruisePortMinutes !== undefined && (
-                <li className="flex items-center gap-2 text-navy-800">
-                  <Icon name="Ship" size={15} className="text-navy-700 shrink-0" />
-                  {business.distanceFromCruisePortMinutes} min from cruise port
+              <li className="flex items-center gap-2 text-navy-800">
+                <Icon name="Ship" size={15} className="text-navy-700 shrink-0" />
+                {business.distanceFromCruisePortMinutes !== undefined
+                  ? formatDistanceFromPort(business.distanceFromCruisePortMinutes, business.distanceFromCruisePortIsEstimate)
+                  : "Distance from cruise port not available"}
+              </li>
+              <li className="flex items-center gap-2 text-navy-800">
+                <Icon name="Hourglass" size={15} className="text-navy-700 shrink-0" />
+                {business.durationMinutes !== undefined
+                  ? `Recommended visit: ~${formatDurationMinutes(business.durationMinutes)}`
+                  : "Visit duration not specified — contact directly"}
+              </li>
+              {business.suggestedTransport && (
+                <li className="flex items-start gap-2 text-navy-800">
+                  <Icon name="Car" size={15} className="mt-0.5 text-navy-700 shrink-0" />
+                  {business.suggestedTransport}
                 </li>
               )}
             </ul>
             <div className="mt-5 space-y-2">
-              <a
-                href={business.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-1.5 rounded-full bg-navy-900 px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 transition-colors"
-              >
-                Visit website
-                <Icon name="ArrowUpRight" size={14} />
-              </a>
+              {business.website ? (
+                <a
+                  href={business.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-full bg-navy-900 px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 transition-colors"
+                >
+                  Visit website
+                  <Icon name="ArrowUpRight" size={14} />
+                </a>
+              ) : business.social.facebook ? (
+                <a
+                  href={`https://facebook.com/${business.social.facebook}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-full bg-navy-900 px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 transition-colors"
+                >
+                  Visit Facebook page
+                  <Icon name="ArrowUpRight" size={14} />
+                </a>
+              ) : (
+                <p className="text-center text-xs text-ink-soft/60">No official website or social page listed.</p>
+              )}
               <Link
                 href="/contact"
                 className="flex w-full items-center justify-center gap-1.5 rounded-full border border-navy-900/15 px-4 py-3 text-sm font-semibold text-navy-800 hover:bg-sand-100 transition-colors"

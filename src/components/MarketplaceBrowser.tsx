@@ -8,6 +8,7 @@ import { businesses } from "@/lib/data/businesses";
 import { categories } from "@/lib/data/categories";
 import { islands } from "@/lib/data/islands";
 import { Business, MarketplaceCategoryId, TravelerTag } from "@/lib/types";
+import { CRUISE_FRIENDLY_MAX_MINUTES } from "@/lib/format";
 
 const MarketplaceMap = dynamic(() => import("@/components/map/MarketplaceMap"), {
   ssr: false,
@@ -58,9 +59,13 @@ export function MarketplaceBrowser({
     let list: Business[] = businesses.filter((b) => {
       if (category !== "all" && b.category !== category) return false;
       if (island !== "all" && b.island !== island) return false;
-      if (b.rating < minRating) return false;
-      if (b.priceLevel > maxPrice) return false;
-      if (nearPort && (b.distanceFromCruisePortMinutes ?? 999) > 30) return false;
+      // A business with no verified rating can't be confirmed to meet a
+      // minimum-rating filter, so it's excluded rather than assumed to pass.
+      if (minRating > 0 && (b.rating === undefined || b.rating < minRating)) return false;
+      // Same logic for price: unknown price range is excluded once the
+      // filter is actually restricting (maxPrice < 4 = "all prices").
+      if (maxPrice < 4 && (b.priceLevel === undefined || b.priceLevel > maxPrice)) return false;
+      if (nearPort && (b.distanceFromCruisePortMinutes ?? 999) > CRUISE_FRIENDLY_MAX_MINUTES) return false;
       if (tags.length && !tags.every((t) => b.tags.includes(t))) return false;
       if (query.trim()) {
         const q = query.toLowerCase();
@@ -76,13 +81,23 @@ export function MarketplaceBrowser({
       return true;
     });
 
+    // Businesses without a verified rating/price always sort to the end,
+    // regardless of sort direction, rather than being coerced to a
+    // fabricated value.
+    const compareDefined = (x: number | undefined, y: number | undefined, dir: 1 | -1) => {
+      if (x === undefined && y === undefined) return 0;
+      if (x === undefined) return 1;
+      if (y === undefined) return -1;
+      return dir * (x - y);
+    };
+
     list = [...list].sort((a, b) => {
-      if (sort === "rating") return b.rating - a.rating;
-      if (sort === "price-low") return a.priceLevel - b.priceLevel;
-      if (sort === "price-high") return b.priceLevel - a.priceLevel;
+      if (sort === "rating") return compareDefined(a.rating, b.rating, -1);
+      if (sort === "price-low") return compareDefined(a.priceLevel, b.priceLevel, 1);
+      if (sort === "price-high") return compareDefined(a.priceLevel, b.priceLevel, -1);
       // recommended: featured first, then rating
       if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
-      return b.rating - a.rating;
+      return compareDefined(a.rating, b.rating, -1);
     });
 
     return list;
@@ -191,7 +206,7 @@ export function MarketplaceBrowser({
               onChange={(e) => setNearPort(e.target.checked)}
               className="h-4 w-4 rounded border-navy-900/30 accent-navy-900"
             />
-            Near the cruise port (≤30 min)
+            Near the cruise port (≤{CRUISE_FRIENDLY_MAX_MINUTES} min)
           </label>
 
           <div>

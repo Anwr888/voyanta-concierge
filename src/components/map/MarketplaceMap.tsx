@@ -48,11 +48,15 @@ export default function MarketplaceMap({ businesses }: { businesses: Business[] 
               <p className="text-[11px] font-bold uppercase tracking-wide text-teal-700">{b.subcategory}</p>
               <p className="mt-0.5 font-semibold text-navy-900 leading-snug">{b.name}</p>
               <div className="mt-1.5 flex items-center justify-between">
-                <span className="flex items-center gap-1 text-xs text-ink-soft">
-                  <RatingStars rating={b.rating} size={11} />
-                  {b.rating.toFixed(1)}
-                </span>
-                <PriceLevel level={b.priceLevel} />
+                {b.rating !== undefined ? (
+                  <span className="flex items-center gap-1 text-xs text-ink-soft">
+                    <RatingStars rating={b.rating} size={11} />
+                    {b.rating.toFixed(1)}
+                  </span>
+                ) : (
+                  <span className="text-xs text-ink-soft/60">{b.reviewLinks ? "See reviews" : "Reviews N/A"}</span>
+                )}
+                {b.priceLevel !== undefined && <PriceLevel level={b.priceLevel} />}
               </div>
               <Link
                 href={`/marketplace/business/${b.slug}`}
