@@ -213,10 +213,17 @@ export function DragDropItinerary({
                     type="button"
                     onClick={() => setPickerTarget({ dayIdx, actIdx })}
                     aria-label="Choose a category and Marketplace experience for this activity"
+                    aria-expanded={pickerTarget?.dayIdx === dayIdx && pickerTarget?.actIdx === actIdx}
                     className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-teal-500/10 px-2.5 py-1 text-[11px] font-semibold text-teal-700 hover:bg-teal-500/20 transition-colors"
                   >
                     {act.category || "Choose a category…"}
-                    <Icon name="ChevronRight" size={11} />
+                    <Icon
+                      name="ChevronDown"
+                      size={12}
+                      className={`transition-transform ${
+                        pickerTarget?.dayIdx === dayIdx && pickerTarget?.actIdx === actIdx ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
                 </div>
 

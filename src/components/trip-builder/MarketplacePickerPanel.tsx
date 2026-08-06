@@ -240,16 +240,28 @@ export function MarketplacePickerPanel({ open, slotLabel, initialCategoryId, onC
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  if (!open) return null;
-
   const results = categoryId ? businesses.filter((b) => b.category === categoryId) : [];
   const detailBusiness = detailSlug ? businesses.find((b) => b.slug === detailSlug) ?? null : null;
 
   return (
-    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Choose a Marketplace experience">
-      <div className="absolute inset-0 bg-navy-950/50 backdrop-blur-sm" onClick={onClose} />
+    <div
+      className={`fixed inset-0 z-[60] transition-[visibility] duration-300 ${open ? "" : "invisible"}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choose a Marketplace experience"
+      {...(open ? {} : { inert: true })}
+    >
+      <div
+        className={`absolute inset-0 bg-navy-950/50 backdrop-blur-sm transition-opacity duration-300 ${
+          open ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={onClose}
+      />
 
-      <div className="absolute inset-y-0 left-0 flex w-full max-w-md flex-col bg-sand-50 shadow-2xl">
+      <div
+        className="absolute inset-y-0 left-0 flex w-full max-w-xl flex-col bg-sand-50 shadow-2xl transition-transform duration-300 ease-out"
+        style={{ transform: open ? "translateX(0)" : "translateX(-100%)" }}
+      >
         <div className="flex items-center justify-between gap-3 border-b border-navy-900/10 bg-white px-5 py-4">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{slotLabel}</p>
