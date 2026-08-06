@@ -215,10 +215,15 @@ export interface ItineraryActivity {
   editable: true;
   // The structured link to the real Marketplace taxonomy — set when a
   // traveler picks a category in the Trip Builder. `marketplaceListingId`
-  // is reserved for the next step (a specific business/experience chosen
-  // for this slot) and is cleared whenever the category changes.
+  // records the specific business/experience chosen for this slot, and is
+  // cleared whenever the category changes.
   marketplaceCategoryId?: MarketplaceCategoryId | null;
   marketplaceListingId?: string | null;
+  // Denormalized from the linked business at selection time, so renaming
+  // `title` afterward doesn't lose the record of which real business this
+  // slot is filled by. Unset for activities with no linked listing.
+  provider?: string;
+  location?: string;
 }
 
 export interface ItineraryDay {

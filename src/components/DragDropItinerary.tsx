@@ -71,6 +71,8 @@ export function DragDropItinerary({
       category: categories.find((c) => c.id === business.category)?.name ?? business.category,
       marketplaceCategoryId: business.category,
       marketplaceListingId: business.slug,
+      provider: business.name,
+      location: `${business.area}, ${business.island}`,
     });
     setPickerTarget(null);
   }
@@ -194,6 +196,12 @@ export function DragDropItinerary({
                     className="w-full bg-transparent font-semibold text-navy-900 focus:outline-none focus:ring-1 focus:ring-navy-900/20 rounded px-1 -mx-1"
                     aria-label="Activity title"
                   />
+                  {act.provider && act.location && (
+                    <p className="mt-0.5 flex items-center gap-1 text-xs text-ink-soft">
+                      <Icon name="MapPin" size={11} className="shrink-0" />
+                      {act.provider} • {act.location}
+                    </p>
+                  )}
                   <textarea
                     value={act.description}
                     onChange={(e) => updateActivity(dayIdx, actIdx, { description: e.target.value })}
