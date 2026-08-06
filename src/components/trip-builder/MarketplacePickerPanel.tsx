@@ -45,6 +45,43 @@ function ReviewsSummary({ business }: { business: Business }) {
   return <span className="text-xs text-ink-soft/60">Reviews unavailable</span>;
 }
 
+function CategoryCard({
+  name,
+  description,
+  icon,
+  isCurrent,
+  onSelect,
+}: {
+  name: string;
+  description: string;
+  icon: string;
+  isCurrent: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="group flex flex-col gap-2.5 rounded-2xl border border-navy-900/10 bg-white p-4 text-left hover:border-teal-500/40 hover:shadow-sm transition-all"
+    >
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 text-teal-700 group-hover:bg-teal-500/20 transition-colors">
+        <Icon name={icon} size={18} />
+      </div>
+      <div>
+        <h4 className="flex items-center gap-1.5 font-display text-sm text-navy-900">
+          {name}
+          {isCurrent && (
+            <span className="rounded-full bg-gold-400/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-gold-700">
+              Current
+            </span>
+          )}
+        </h4>
+        <p className="mt-0.5 text-xs text-ink-soft leading-relaxed line-clamp-2">{description}</p>
+      </div>
+    </button>
+  );
+}
+
 function ResultCard({
   business,
   onViewDetails,
@@ -219,14 +256,16 @@ export function MarketplacePickerPanel({ open, slotLabel, initialCategoryId, onC
   const [wasOpen, setWasOpen] = useState(open);
 
   // Each time the panel opens for a (possibly different) activity, start
-  // fresh on that activity's own category instead of wherever the last row
-  // left off. Adjusted during render (React's recommended pattern for
-  // resetting state on a prop transition) rather than in an effect, so there
-  // is no extra render where the panel briefly shows the previous state.
+  // fresh on step one (category selection) instead of wherever the last row
+  // left off — the activity's current category (if any) is only used to
+  // badge that category as "Current" in the grid, not to skip the step.
+  // Adjusted during render (React's recommended pattern for resetting state
+  // on a prop transition) rather than in an effect, so there is no extra
+  // render where the panel briefly shows the previous state.
   if (open !== wasOpen) {
     setWasOpen(open);
     if (open) {
-      setCategoryId(initialCategoryId);
+      setCategoryId("");
       setDetailSlug(null);
     }
   }
@@ -265,7 +304,9 @@ export function MarketplacePickerPanel({ open, slotLabel, initialCategoryId, onC
         <div className="flex items-center justify-between gap-3 border-b border-navy-900/10 bg-white px-5 py-4">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{slotLabel}</p>
-            <h3 className="font-display text-lg text-navy-900">Choose an experience</h3>
+            <h3 className="font-display text-lg text-navy-900">
+              {detailBusiness ? detailBusiness.name : categoryId ? categories.find((c) => c.id === categoryId)?.name : "Choose a category"}
+            </h3>
           </div>
           <button
             type="button"
@@ -277,22 +318,16 @@ export function MarketplacePickerPanel({ open, slotLabel, initialCategoryId, onC
           </button>
         </div>
 
-        {!detailBusiness && (
+        {categoryId && !detailBusiness && (
           <div className="border-b border-navy-900/10 bg-white px-5 py-3">
-            <div className="flex flex-wrap gap-1.5">
-              {categories.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => setCategoryId(c.id)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                    categoryId === c.id ? "bg-navy-900 text-white" : "bg-sand-100 text-navy-700 hover:bg-sand-200"
-                  }`}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={() => setCategoryId("")}
+              className="flex items-center gap-1 text-xs font-semibold text-navy-700 hover:text-navy-900"
+            >
+              <Icon name="ChevronLeft" size={14} />
+              All categories
+            </button>
           </div>
         )}
 
@@ -304,9 +339,18 @@ export function MarketplacePickerPanel({ open, slotLabel, initialCategoryId, onC
               onSelect={() => onSelect(detailBusiness)}
             />
           ) : !categoryId ? (
-            <p className="py-10 text-center text-sm text-ink-soft">
-              Choose a category above to see relevant Marketplace experiences.
-            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {categories.map((c) => (
+                <CategoryCard
+                  key={c.id}
+                  name={c.name}
+                  description={c.description}
+                  icon={c.icon}
+                  isCurrent={c.id === initialCategoryId}
+                  onSelect={() => setCategoryId(c.id)}
+                />
+              ))}
+            </div>
           ) : results.length === 0 ? (
             <p className="py-10 text-center text-sm text-ink-soft">
               No {categories.find((c) => c.id === categoryId)?.name.toLowerCase()} listings yet — try another category.
