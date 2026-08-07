@@ -25,7 +25,7 @@ const paths = [
 
 export function TravelerFork() {
   return (
-    <section className="relative z-20 -mt-28 sm:-mt-32 px-4 sm:px-6 lg:px-8">
+    <section className="relative z-20 mt-6 sm:mt-10 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="relative grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="hidden md:flex absolute left-1/2 top-1/2 z-20 h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-gold-500 shadow-lg shadow-navy-950/30 ring-4 ring-sand-50">
