@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ItineraryDay, ItineraryActivity, Business, MarketplaceCategoryId } from "@/lib/types";
 import { Icon } from "@/components/Icon";
-import { newActivityId } from "@/lib/itinerary";
+import { newActivityId, recalculateActivityTimes } from "@/lib/itinerary";
 import { categories } from "@/lib/data/categories";
 import { MarketplacePickerPanel } from "@/components/trip-builder/MarketplacePickerPanel";
 
@@ -36,6 +36,14 @@ export function DragDropItinerary({
   const [overDay, setOverDay] = useState<number | null>(null);
   const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
 
+  // After a drop, the destination day's activity times are recalculated
+  // from scratch based on each activity's new position — a 5:00 PM activity
+  // dragged to the top becomes a morning time, one dragged near the bottom
+  // becomes afternoon/evening, and everything in between stays in
+  // chronological order with sensible spacing. Only that day's times
+  // change: the source day (when moving across days) keeps its remaining
+  // activities' times untouched, since their relative order to each other
+  // didn't change.
   function moveActivity(from: DragRef, toDayIdx: number, toActIdx: number | null) {
     const next = days.map((d) => ({ ...d, activities: [...d.activities] }));
     const [moved] = next[from.dayIdx].activities.splice(from.actIdx, 1);
@@ -48,6 +56,7 @@ export function DragDropItinerary({
       insertAt -= 1;
     }
     next[toDayIdx].activities.splice(insertAt, 0, moved);
+    next[toDayIdx].activities = recalculateActivityTimes(next[toDayIdx].activities);
     onChange(next);
   }
 
