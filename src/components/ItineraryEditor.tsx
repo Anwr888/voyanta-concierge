@@ -1,8 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { ItineraryDay, ItineraryActivity } from "@/lib/types";
 import { Icon } from "@/components/Icon";
 import { newActivityId } from "@/lib/itinerary";
+
+interface DragRef {
+  dayIdx: number;
+  actIdx: number;
+}
 
 const categoryOptions = [
   "Transportation",
@@ -26,6 +32,8 @@ export function ItineraryEditor({
   days: ItineraryDay[];
   onChange: (days: ItineraryDay[]) => void;
 }) {
+  const [dragging, setDragging] = useState<DragRef | null>(null);
+
   function updateActivity(dayIdx: number, actIdx: number, patch: Partial<ItineraryActivity>) {
     const next = days.map((d, i) =>
       i !== dayIdx
@@ -64,12 +72,17 @@ export function ItineraryEditor({
     onChange(next);
   }
 
-  function moveActivity(dayIdx: number, actIdx: number, dir: -1 | 1) {
-    const day = days[dayIdx];
-    const target = actIdx + dir;
-    if (target < 0 || target >= day.activities.length) return;
-    const activities = [...day.activities];
-    [activities[actIdx], activities[target]] = [activities[target], activities[actIdx]];
+  // Reorders within a single day only (drag never crosses days here) — drop
+  // targeting `toActIdx === null` appends to the end of that day's list.
+  function moveActivity(dayIdx: number, fromActIdx: number, toActIdx: number | null) {
+    const activities = [...days[dayIdx].activities];
+    const [moved] = activities.splice(fromActIdx, 1);
+    if (!moved) return;
+
+    let insertAt = toActIdx === null ? activities.length : toActIdx;
+    if (fromActIdx < insertAt) insertAt -= 1;
+    activities.splice(insertAt, 0, moved);
+
     const next = days.map((d, i) => (i !== dayIdx ? d : { ...d, activities }));
     onChange(next);
   }
@@ -81,7 +94,20 @@ export function ItineraryEditor({
   return (
     <div className="space-y-6">
       {days.map((day, dayIdx) => (
-        <div key={day.day} className="rounded-2xl border border-navy-900/10 bg-white overflow-hidden">
+        <div
+          key={day.day}
+          onDragOver={(e) => {
+            if (dragging?.dayIdx !== dayIdx) return;
+            e.preventDefault();
+          }}
+          onDrop={(e) => {
+            if (dragging?.dayIdx !== dayIdx) return;
+            e.preventDefault();
+            moveActivity(dayIdx, dragging.actIdx, null);
+            setDragging(null);
+          }}
+          className="rounded-2xl border border-navy-900/10 bg-white overflow-hidden"
+        >
           <div className="flex items-center gap-3 bg-navy-900 px-5 py-3.5">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-navy-950">
               {day.day}
@@ -96,26 +122,29 @@ export function ItineraryEditor({
 
           <div className="divide-y divide-navy-900/8">
             {day.activities.map((act, actIdx) => (
-              <div key={act.id} className="flex gap-3 p-4 sm:p-5">
-                <div className="hidden sm:flex flex-col items-center gap-1 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => moveActivity(dayIdx, actIdx, -1)}
-                    disabled={actIdx === 0}
-                    aria-label="Move up"
-                    className="text-navy-900/30 hover:text-navy-900 disabled:opacity-20"
-                  >
-                    <Icon name="ChevronUp" size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => moveActivity(dayIdx, actIdx, 1)}
-                    disabled={actIdx === day.activities.length - 1}
-                    aria-label="Move down"
-                    className="text-navy-900/30 hover:text-navy-900 disabled:opacity-20"
-                  >
-                    <Icon name="ChevronDown" size={16} />
-                  </button>
+              <div
+                key={act.id}
+                draggable
+                onDragStart={() => setDragging({ dayIdx, actIdx })}
+                onDragEnd={() => setDragging(null)}
+                onDragOver={(e) => {
+                  if (dragging?.dayIdx !== dayIdx) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDrop={(e) => {
+                  if (dragging?.dayIdx !== dayIdx) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  moveActivity(dayIdx, dragging.actIdx, actIdx);
+                  setDragging(null);
+                }}
+                className={`flex gap-3 p-4 sm:p-5 cursor-grab active:cursor-grabbing transition-opacity ${
+                  dragging?.dayIdx === dayIdx && dragging?.actIdx === actIdx ? "opacity-40" : ""
+                }`}
+              >
+                <div className="pt-1 text-navy-900/25">
+                  <Icon name="GripVertical" size={16} />
                 </div>
 
                 <input
