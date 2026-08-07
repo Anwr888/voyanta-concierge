@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ItineraryDay, ItineraryActivity, Business, MarketplaceCategoryId } from "@/lib/types";
 import { Icon } from "@/components/Icon";
-import { newActivityId } from "@/lib/itinerary";
+import { newActivityId, recalculateActivityTimes } from "@/lib/itinerary";
 import { categories } from "@/lib/data/categories";
 import { MarketplacePickerPanel } from "@/components/trip-builder/MarketplacePickerPanel";
 
@@ -93,16 +93,29 @@ export function ItineraryEditor({
 
   // Reorders within a single day only (drag never crosses days here) — drop
   // targeting `toActIdx === null` appends to the end of that day's list.
+  // Times are then recalculated for that day from its new order, same as
+  // the Trip Builder: whichever activity lands first gets a morning time,
+  // and the rest progress chronologically from there.
   function moveActivity(dayIdx: number, fromActIdx: number, toActIdx: number | null) {
     const activities = [...days[dayIdx].activities];
     const [moved] = activities.splice(fromActIdx, 1);
     if (!moved) return;
 
-    let insertAt = toActIdx === null ? activities.length : toActIdx;
-    if (fromActIdx < insertAt) insertAt -= 1;
+    // The "insert before this index" adjustment only applies when
+    // `toActIdx` is a real target position from the pre-removal array —
+    // append-to-end's `activities.length` is already computed from the
+    // post-removal array and must not be shifted again, or the activity
+    // lands one slot before the actual end instead of at it.
+    let insertAt: number;
+    if (toActIdx === null) {
+      insertAt = activities.length;
+    } else {
+      insertAt = fromActIdx < toActIdx ? toActIdx - 1 : toActIdx;
+    }
     activities.splice(insertAt, 0, moved);
 
-    const next = days.map((d, i) => (i !== dayIdx ? d : { ...d, activities }));
+    const recalculated = recalculateActivityTimes(activities);
+    const next = days.map((d, i) => (i !== dayIdx ? d : { ...d, activities: recalculated }));
     onChange(next);
   }
 
