@@ -77,6 +77,16 @@ export function recalculateActivityTimes(activities: ItineraryActivity[]): Itine
   return activities.map((act, i) => ({ ...act, time: formatClockTime(DAY_START_MIN + i * spacing) }));
 }
 
+// Selectable options for the manual time picker: every half hour from
+// 6:00 AM to 11:30 PM, covering any reasonable activity time.
+export const activityTimeOptions: string[] = (() => {
+  const options: string[] = [];
+  for (let min = 6 * 60; min <= 23 * 60 + 30; min += 30) {
+    options.push(formatClockTime(min));
+  }
+  return options;
+})();
+
 export const estimateBudgetPerDay: Record<string, [number, number]> = {
   "budget-friendly": [80, 150],
   moderate: [150, 300],

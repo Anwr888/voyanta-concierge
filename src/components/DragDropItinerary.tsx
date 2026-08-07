@@ -6,6 +6,7 @@ import { Icon } from "@/components/Icon";
 import { newActivityId, recalculateActivityTimes } from "@/lib/itinerary";
 import { categories } from "@/lib/data/categories";
 import { MarketplacePickerPanel } from "@/components/trip-builder/MarketplacePickerPanel";
+import { ActivityTimePicker } from "@/components/ActivityTimePicker";
 
 interface DragRef {
   dayIdx: number;
@@ -191,11 +192,9 @@ export function DragDropItinerary({
                   <Icon name="GripVertical" size={16} />
                 </div>
 
-                <input
+                <ActivityTimePicker
                   value={act.time}
-                  onChange={(e) => updateActivity(dayIdx, actIdx, { time: e.target.value })}
-                  className="w-24 shrink-0 rounded-lg bg-sand-100 px-2.5 py-1.5 text-xs font-semibold text-navy-800 text-center h-fit focus:outline-none focus:ring-2 focus:ring-navy-900/20"
-                  aria-label="Activity time"
+                  onChange={(time) => updateActivity(dayIdx, actIdx, { time })}
                 />
 
                 <div className="flex-1 min-w-0">
