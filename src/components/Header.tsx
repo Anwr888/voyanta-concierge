@@ -39,19 +39,19 @@ export function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-[4.5rem] items-center justify-between py-2.5 lg:grid lg:grid-cols-3">
+        <div className="flex h-[4.5rem] items-center justify-between py-2.5 lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-4">
           <Logo variant="dark" className="lg:justify-self-start" />
 
-          <nav className="hidden lg:flex lg:justify-self-center items-center gap-1" aria-label="Primary">
+          <nav className="hidden lg:flex lg:justify-self-center items-center gap-0.5 min-w-0" aria-label="Primary">
             {primaryNav.map((group) =>
               group.links ? (
-                <div key={group.label} className="relative group">
+                <div key={group.label} className="relative group shrink-0">
                   <Link
                     href={group.href}
-                    className="flex items-center gap-1 px-3.5 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors"
+                    className="flex items-center gap-1 px-3 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors whitespace-nowrap"
                   >
                     {group.label}
-                    <Icon name="ChevronDown" size={14} className="text-navy-800/60" />
+                    <Icon name="ChevronDown" size={14} className="text-navy-800/60 shrink-0" />
                   </Link>
                   <div className="absolute left-0 top-full pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 focus-within:opacity-100 focus-within:visible focus-within:translate-y-0 transition-all duration-150">
                     <div className="w-72 rounded-2xl border border-navy-900/10 bg-white shadow-xl shadow-navy-950/10 p-2">
@@ -74,7 +74,7 @@ export function Header() {
                 <Link
                   key={group.label}
                   href={group.href}
-                  className="px-3.5 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors"
+                  className="shrink-0 px-3 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors whitespace-nowrap"
                 >
                   {group.label}
                 </Link>
@@ -82,7 +82,7 @@ export function Header() {
             )}
             <Link
               href="/list-your-business"
-              className="px-3.5 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors"
+              className="shrink-0 px-3 py-2 rounded-full text-sm font-semibold text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors whitespace-nowrap"
             >
               List Your Business
             </Link>
