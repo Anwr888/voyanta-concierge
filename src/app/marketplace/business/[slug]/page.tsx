@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { BusinessMedia } from "@/components/BusinessMedia";
 import { RatingStars, PriceLevel } from "@/components/RatingStars";
-import { LocationPanel } from "@/components/LocationPanel";
+import { LazyLocationMap } from "@/components/map/LazyLocationMap";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { getBusiness, businesses } from "@/lib/data/businesses";
 import { getCategory } from "@/lib/data/categories";
@@ -202,7 +202,7 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
         </div>
 
         <aside className="space-y-5">
-          <div className="rounded-2xl border border-navy-900/10 bg-white p-5 sticky top-24">
+          <div className="rounded-2xl border border-navy-900/10 bg-white p-5 lg:sticky lg:top-24">
             <h3 className="font-display text-lg text-navy-900">Contact</h3>
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex items-start gap-2 text-navy-800">
@@ -231,6 +231,20 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
                 </li>
               )}
             </ul>
+
+            <div className="mt-5">
+              <div className="relative isolate z-0 h-40 w-full overflow-hidden rounded-xl bg-navy-900">
+                <LazyLocationMap lat={business.location.lat} lng={business.location.lng} />
+              </div>
+              <div className="mt-2.5 flex items-start gap-2 text-sm">
+                <Icon name="MapPin" size={15} className="mt-0.5 shrink-0 text-navy-700" />
+                <div>
+                  <p className="font-medium text-navy-900">{business.address}</p>
+                  <p className="text-ink-soft">{business.island}</p>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-5 space-y-2">
               {business.website ? (
                 <a
@@ -277,8 +291,6 @@ export default async function BusinessProfilePage({ params }: PageProps<"/market
               </div>
             )}
           </div>
-
-          <LocationPanel address={business.address} island={business.island} location={business.location} />
 
           <p className="text-xs text-ink-soft leading-relaxed px-1">
             {business.name} is an independent local business. Voyanta Concierge helps travelers
