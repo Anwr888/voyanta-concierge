@@ -9,7 +9,7 @@ import { ItineraryDay } from "@/lib/types";
 import { buildTripDays, estimateTripCost } from "@/lib/itinerary";
 import { islands } from "@/lib/data/islands";
 import { budgetOptions } from "@/lib/data/quiz";
-import { saveTrip } from "@/lib/storage";
+import { upsertTrip, newTripId } from "@/lib/storage";
 
 export function ResultsClient() {
   const params = useSearchParams();
@@ -26,18 +26,23 @@ export function ResultsClient() {
   const [days, setDays] = useState<ItineraryDay[]>(() => buildTripDays(vacationType, nights));
   const [saved, setSaved] = useState(false);
   const [loadedKey, setLoadedKey] = useState(tripKey);
+  // Regenerated whenever a fresh planning session starts (tripKey changes),
+  // so re-saving the same session updates one trip instead of duplicating
+  // it, while starting over creates a genuinely new saved trip.
+  const [tripId, setTripId] = useState(() => newTripId());
 
   if (tripKey !== loadedKey) {
     setLoadedKey(tripKey);
     setDays(buildTripDays(vacationType, nights));
     setSaved(false);
+    setTripId(newTripId());
   }
 
   const selectedIsland = islands.find((i) => i.slug === island);
   const cost = estimateTripCost(budget, nights, adults, children);
 
   function handleSave() {
-    saveTrip({ island, startDate, nights, adults, children, budget, vacationType, days });
+    upsertTrip({ id: tripId, island, startDate, nights, adults, children, budget, vacationType, days });
     setSaved(true);
   }
 
@@ -112,7 +117,7 @@ export function ResultsClient() {
               </button>
               {saved && (
                 <Link
-                  href="/trip-builder"
+                  href={`/trip-builder?tripId=${tripId}`}
                   className="flex w-full items-center justify-center gap-1.5 rounded-full border border-navy-900/15 px-4 py-3 text-sm font-semibold text-navy-800 hover:bg-sand-100 transition-colors"
                 >
                   Open in Trip Builder

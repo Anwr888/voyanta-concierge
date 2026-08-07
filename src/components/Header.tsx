@@ -2,15 +2,22 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { Icon } from "@/components/Icon";
 import { primaryNav, secondaryNav } from "@/lib/nav";
+
+const accountNav = [
+  { label: "My Trips", href: "/account/trips" },
+  { label: "Saved Experiences", href: "/account#favorites" },
+  { label: "Account", href: "/account" },
+];
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const [lastPathname, setLastPathname] = useState(pathname);
   if (pathname !== lastPathname) {
@@ -82,13 +89,36 @@ export function Header() {
           </nav>
 
           <div className="hidden lg:flex lg:justify-self-end items-center gap-2">
-            <Link
-              href="/account"
-              aria-label="Account"
-              className="p-2.5 rounded-full text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors"
-            >
-              <Icon name="CircleUserRound" size={20} />
-            </Link>
+            <div className="relative group">
+              <Link
+                href="/account"
+                aria-label="Account"
+                className="p-2.5 rounded-full text-navy-800 hover:text-navy-900 hover:bg-navy-900/5 transition-colors"
+              >
+                <Icon name="CircleUserRound" size={20} />
+              </Link>
+              <div className="absolute right-0 top-full pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 focus-within:opacity-100 focus-within:visible focus-within:translate-y-0 transition-all duration-150">
+                <div className="w-52 rounded-2xl border border-navy-900/10 bg-white shadow-xl shadow-navy-950/10 p-2">
+                  {accountNav.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="block rounded-xl px-3.5 py-2.5 text-sm font-semibold text-navy-900 hover:bg-sand-100 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                  <div className="my-1 h-px bg-navy-900/8" />
+                  <button
+                    type="button"
+                    onClick={() => router.push("/")}
+                    className="block w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-semibold text-navy-700 hover:bg-sand-100 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            </div>
             <Link
               href="/plan"
               className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-navy-900 px-4.5 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 transition-colors"
@@ -128,6 +158,19 @@ export function Header() {
                 )}
               </div>
             ))}
+            <div className="h-px bg-navy-900/10 my-3" />
+            {accountNav.map((link) => (
+              <Link key={link.href} href={link.href} className="block text-base font-medium text-navy-800 py-2">
+                {link.label}
+              </Link>
+            ))}
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="block w-full text-left text-base font-medium text-navy-800 py-2"
+            >
+              Sign Out
+            </button>
             <div className="h-px bg-navy-900/10 my-3" />
             {secondaryNav.map((link) => (
               <Link key={link.href} href={link.href} className="block text-base font-medium text-navy-800 py-2">

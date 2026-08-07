@@ -1,23 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { DragDropItinerary } from "@/components/DragDropItinerary";
 import { ItineraryDay } from "@/lib/types";
-import { SavedTrip, loadTrip, saveTrip, clearTrip } from "@/lib/storage";
+import { SavedTrip, getTripById, getMostRecentTrip, upsertTrip, deleteTrip, newTripId } from "@/lib/storage";
 import { decodeTrip, encodeTrip } from "@/lib/tripShare";
 import { estimateTripCost } from "@/lib/itinerary";
 import { islands } from "@/lib/data/islands";
 import { budgetOptions } from "@/lib/data/quiz";
+
+type SaveStatus = "idle" | "saving" | "saved";
 
 export function TripBuilderClient() {
   const params = useSearchParams();
   const [trip, setTrip] = useState<Omit<SavedTrip, "savedAt"> | null | undefined>(undefined);
   const [days, setDays] = useState<ItineraryDay[]>([]);
   const [copied, setCopied] = useState(false);
-  const [savedFlash, setSavedFlash] = useState(false);
+  const [status, setStatus] = useState<SaveStatus>("idle");
+
+  // Mirrors of the latest trip/days so the unload flush (and the debounced
+  // save) always write what's actually on screen, not a stale closure. Kept
+  // in sync via an effect rather than during render, since mutating a ref's
+  // `current` while rendering is itself a render side effect to avoid.
+  const tripRef = useRef(trip);
+  const daysRef = useRef(days);
+  useEffect(() => {
+    tripRef.current = trip;
+    daysRef.current = days;
+  }, [trip, days]);
+
+  // The load effect below sets `days` once for hydration — that pass isn't
+  // a traveler edit and shouldn't trigger a save (it would also stomp the
+  // real `savedAt` with "just now" for a trip nobody actually touched yet).
+  const skipNextSaveRef = useRef(true);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     // Shared-link data and any previously saved trip both live outside React
@@ -27,25 +46,67 @@ export function TripBuilderClient() {
     if (dataParam) {
       const decoded = decodeTrip(dataParam);
       if (decoded) {
-        setTrip(decoded);
-        setDays(decoded.days);
-        saveTrip(decoded);
+        const withId: Omit<SavedTrip, "savedAt"> = { ...decoded, id: decoded.id || newTripId() };
+        skipNextSaveRef.current = true;
+        setTrip(withId);
+        setDays(withId.days);
+        upsertTrip(withId);
         return;
       }
     }
-    const stored = loadTrip();
+    const tripId = params.get("tripId");
+    const stored = tripId ? getTripById(tripId) : getMostRecentTrip();
+    skipNextSaveRef.current = true;
     setTrip(stored);
     setDays(stored?.days ?? []);
     /* eslint-enable react-hooks/set-state-in-effect */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleSave() {
-    if (!trip) return;
-    saveTrip({ ...trip, days });
-    setSavedFlash(true);
-    setTimeout(() => setSavedFlash(false), 2000);
+  function flushSave() {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = null;
+    }
+    if (!tripRef.current) return;
+    upsertTrip({ ...tripRef.current, days: daysRef.current });
+    setStatus("saved");
   }
+
+  // Autosaves every activity add/remove/edit/replace/reorder, debounced so a
+  // burst of edits (typing, a fast drag) doesn't hammer localStorage.
+  useEffect(() => {
+    if (!trip) return;
+    if (skipNextSaveRef.current) {
+      skipNextSaveRef.current = false;
+      return;
+    }
+    setStatus("saving");
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(flushSave, 600);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [days]);
+
+  // Guarantees the latest edit is on disk even if it's still inside the
+  // debounce window when the traveler refreshes, hits Back, switches tabs,
+  // or closes the tab — localStorage writes are synchronous, so flushing
+  // here is reliable (unlike a network save would be).
+  useEffect(() => {
+    function onVisibilityChange() {
+      if (document.visibilityState === "hidden") flushSave();
+    }
+    window.addEventListener("beforeunload", flushSave);
+    window.addEventListener("pagehide", flushSave);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("beforeunload", flushSave);
+      window.removeEventListener("pagehide", flushSave);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, []);
 
   async function handleShare() {
     if (!trip) return;
@@ -61,7 +122,7 @@ export function TripBuilderClient() {
   }
 
   function handleClear() {
-    clearTrip();
+    if (trip) deleteTrip(trip.id);
     setTrip(null);
     setDays([]);
   }
@@ -144,15 +205,23 @@ export function TripBuilderClient() {
               </p>
             </div>
 
-            <div className="mt-5 space-y-2">
-              <button
-                type="button"
-                onClick={handleSave}
-                className="flex w-full items-center justify-center gap-1.5 rounded-full bg-navy-900 px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 transition-colors"
-              >
-                <Icon name={savedFlash ? "Check" : "Save"} size={15} />
-                {savedFlash ? "Saved" : "Save changes"}
-              </button>
+            <div className="mt-5 flex items-center justify-center gap-1.5 text-xs font-medium">
+              {status === "saving" ? (
+                <span className="flex items-center gap-1.5 text-ink-soft">
+                  <Icon name="RotateCcw" size={12} className="animate-spin" />
+                  Saving…
+                </span>
+              ) : status === "saved" ? (
+                <span className="flex items-center gap-1.5 text-teal-700">
+                  <Icon name="Check" size={12} />
+                  All changes saved
+                </span>
+              ) : (
+                <span className="text-ink-soft/60">Autosaves as you edit</span>
+              )}
+            </div>
+
+            <div className="mt-3 space-y-2">
               <button
                 type="button"
                 onClick={handleShare}
