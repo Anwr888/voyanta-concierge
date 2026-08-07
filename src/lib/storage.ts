@@ -2,6 +2,10 @@ import { ItineraryDay } from "@/lib/types";
 
 export interface SavedTrip {
   id: string;
+  // Optional: trips saved before this field existed fall back to a
+  // generated "{nights} Days in {island}" label wherever they're
+  // displayed (see getTripDisplayName in lib/format.ts).
+  name?: string;
   island: string;
   startDate: string;
   nights: number;
@@ -82,6 +86,32 @@ export function upsertTrip(trip: Omit<SavedTrip, "savedAt">): SavedTrip {
 
 export function deleteTrip(id: string) {
   writeTrips(readTrips().filter((t) => t.id !== id));
+}
+
+export function renameTrip(id: string, name: string): SavedTrip | null {
+  const trips = readTrips();
+  const idx = trips.findIndex((t) => t.id === id);
+  if (idx === -1) return null;
+  trips[idx] = { ...trips[idx], name: name.trim(), savedAt: new Date().toISOString() };
+  writeTrips(trips);
+  return trips[idx];
+}
+
+// Copies a trip (new id, fresh savedAt, everything else identical) and adds
+// it to the list rather than replacing anything.
+export function duplicateTrip(id: string): SavedTrip | null {
+  const original = getTripById(id);
+  if (!original) return null;
+  const copy: SavedTrip = {
+    ...original,
+    id: newTripId(),
+    name: `${original.name?.trim() || "Untitled trip"} (Copy)`,
+    savedAt: new Date().toISOString(),
+  };
+  const trips = readTrips();
+  trips.push(copy);
+  writeTrips(trips);
+  return copy;
 }
 
 export function getFavorites(): string[] {

@@ -11,6 +11,7 @@ import { decodeTrip, encodeTrip } from "@/lib/tripShare";
 import { estimateTripCost } from "@/lib/itinerary";
 import { islands } from "@/lib/data/islands";
 import { budgetOptions } from "@/lib/data/quiz";
+import { getTripDisplayName } from "@/lib/format";
 
 type SaveStatus = "idle" | "saving" | "saved";
 
@@ -108,6 +109,21 @@ export function TripBuilderClient() {
     };
   }, []);
 
+  // Autosave already covers every edit; this button is for a traveler who
+  // wants explicit reassurance that it's saved right now, without waiting
+  // out the debounce. Clears any pending debounce and shows the same
+  // Saving…/Saved status the autosave uses, with a brief recognizable delay
+  // so the click visibly does something (the actual write is effectively
+  // instant since it's local storage, not a network call).
+  function handleManualSave() {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = null;
+    }
+    setStatus("saving");
+    setTimeout(flushSave, 300);
+  }
+
   async function handleShare() {
     if (!trip) return;
     const encoded = encodeTrip({ ...trip, days });
@@ -155,15 +171,14 @@ export function TripBuilderClient() {
 
   const selectedIsland = islands.find((i) => i.slug === trip.island);
   const cost = estimateTripCost(trip.budget, trip.nights, trip.adults, trip.children);
+  const displayName = getTripDisplayName(trip, selectedIsland?.name ?? trip.island);
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 print:hidden">
         <div>
           <p className="eyebrow">Trip Builder</p>
-          <h1 className="mt-2 font-display text-3xl sm:text-4xl text-navy-900">
-            {trip.nights} Days in {selectedIsland?.name ?? trip.island}
-          </h1>
+          <h1 className="mt-2 font-display text-3xl sm:text-4xl text-navy-900">{displayName}</h1>
           <p className="mt-2 text-ink-soft">Drag any activity to reorder it — even across days.</p>
         </div>
         <button onClick={handleClear} type="button" className="inline-flex items-center gap-1.5 text-sm font-semibold text-navy-800 hover:text-red-600">
@@ -205,20 +220,30 @@ export function TripBuilderClient() {
               </p>
             </div>
 
-            <div className="mt-5 flex items-center justify-center gap-1.5 text-xs font-medium">
-              {status === "saving" ? (
-                <span className="flex items-center gap-1.5 text-ink-soft">
-                  <Icon name="RotateCcw" size={12} className="animate-spin" />
-                  Saving…
-                </span>
-              ) : status === "saved" ? (
-                <span className="flex items-center gap-1.5 text-teal-700">
-                  <Icon name="Check" size={12} />
-                  All changes saved
-                </span>
-              ) : (
-                <span className="text-ink-soft/60">Autosaves as you edit</span>
-              )}
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={handleManualSave}
+                className="flex w-full items-center justify-center gap-1.5 rounded-full bg-navy-900 px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 transition-colors"
+              >
+                <Icon name="Save" size={15} />
+                Save Trip
+              </button>
+              <div className="mt-2 flex items-center justify-center gap-1.5 text-xs font-medium">
+                {status === "saving" ? (
+                  <span className="flex items-center gap-1.5 text-ink-soft">
+                    <Icon name="RotateCcw" size={12} className="animate-spin" />
+                    Saving…
+                  </span>
+                ) : status === "saved" ? (
+                  <span className="flex items-center gap-1.5 text-teal-700">
+                    <Icon name="Check" size={12} />
+                    Saved
+                  </span>
+                ) : (
+                  <span className="text-ink-soft/60">Autosaves as you edit</span>
+                )}
+              </div>
             </div>
 
             <div className="mt-3 space-y-2">

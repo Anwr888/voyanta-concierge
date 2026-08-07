@@ -7,6 +7,7 @@ import { BusinessCard } from "@/components/BusinessCard";
 import { getFavorites, getTrips, SavedTrip } from "@/lib/storage";
 import { businesses } from "@/lib/data/businesses";
 import { islands } from "@/lib/data/islands";
+import { getTripDisplayName } from "@/lib/format";
 
 export default function AccountPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -51,7 +52,7 @@ export default function AccountPage() {
               <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-navy-900/10 bg-white p-5">
                 <div>
                   <p className="font-display text-lg text-navy-900">
-                    {mostRecentTrip.nights} Days in {selectedIsland?.name ?? mostRecentTrip.island}
+                    {getTripDisplayName(mostRecentTrip, selectedIsland?.name ?? mostRecentTrip.island)}
                   </p>
                   <p className="mt-1 text-sm text-ink-soft">
                     {mostRecentTrip.vacationType} · {mostRecentTrip.adults} adult{mostRecentTrip.adults !== 1 ? "s" : ""}

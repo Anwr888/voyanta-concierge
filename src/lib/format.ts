@@ -58,3 +58,11 @@ export function formatRelativeTime(iso: string): string {
 
   return new Date(then).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
+
+// A saved trip's display name: the traveler's own name if they set one,
+// otherwise a generated "{nights} Days in {island}" label — including for
+// trips saved before the name field existed. Takes an already-resolved
+// island display name so this stays independent of the islands data module.
+export function getTripDisplayName(trip: { name?: string; nights: number }, islandName: string): string {
+  return trip.name?.trim() || `${trip.nights} Days in ${islandName}`;
+}

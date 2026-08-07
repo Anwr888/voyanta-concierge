@@ -42,7 +42,18 @@ export function ResultsClient() {
   const cost = estimateTripCost(budget, nights, adults, children);
 
   function handleSave() {
-    upsertTrip({ id: tripId, island, startDate, nights, adults, children, budget, vacationType, days });
+    upsertTrip({
+      id: tripId,
+      name: `${nights} Days in ${selectedIsland?.name ?? island}`,
+      island,
+      startDate,
+      nights,
+      adults,
+      children,
+      budget,
+      vacationType,
+      days,
+    });
     setSaved(true);
   }
 
