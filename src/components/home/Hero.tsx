@@ -10,9 +10,10 @@ export function Hero() {
         muted
         loop
         playsInline
-        poster="/images/nassau-oceanfront-1.jpg"
+        preload="auto"
+        poster="/images/baha-mar-hero-poster.jpg"
       >
-        <source src="/video/hero-ocean-view.mp4" type="video/mp4" />
+        <source src="/video/hero-bahamar.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/60 to-navy-950/25" />
       <div className="absolute inset-0 bg-gradient-to-r from-navy-950/75 via-navy-950/15 to-transparent" />
