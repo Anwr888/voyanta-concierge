@@ -10,12 +10,12 @@ export function Hero() {
         muted
         loop
         playsInline
-        poster="/images/baha-mar-resort-1.jpg"
+        poster="/images/nassau-oceanfront-1.jpg"
       >
-        <source src="/video/hero-bahamar.mp4" type="video/mp4" />
+        <source src="/video/hero-ocean-view.mp4" type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/55 to-navy-950/20" />
-      <div className="absolute inset-0 bg-gradient-to-r from-navy-950/70 via-navy-950/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/60 to-navy-950/25" />
+      <div className="absolute inset-0 bg-gradient-to-r from-navy-950/75 via-navy-950/15 to-transparent" />
 
       <div className="relative z-10 flex h-full flex-col justify-end">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-40 sm:pb-44">
@@ -30,16 +30,17 @@ export function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/plan"
-              className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-semibold text-navy-950 hover:bg-gold-400 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-gold-500 px-6 py-3.5 text-sm font-semibold text-navy-950 hover:bg-gold-400 transition-colors shadow-lg shadow-navy-950/20"
             >
-              Start planning your trip
+              Start Planning My Vacation
               <Icon name="ArrowRight" size={16} />
             </Link>
             <Link
               href="/cruise"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 backdrop-blur px-6 py-3.5 text-sm font-semibold text-white hover:bg-white/15 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-navy-950 hover:bg-sand-100 transition-colors shadow-lg shadow-navy-950/20"
             >
-              I&apos;m arriving by cruise ship
+              <Icon name="Ship" size={16} className="text-navy-800" />
+              I&apos;m Arriving by Cruise Ship
             </Link>
           </div>
         </div>

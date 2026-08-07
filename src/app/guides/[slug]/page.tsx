@@ -53,6 +53,23 @@ export default async function GuideArticlePage({ params }: PageProps<"/guides/[s
                   {para}
                 </p>
               ))}
+              {section.quickFacts && (
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 rounded-xl bg-sand-100 px-4 py-3 text-sm text-navy-800">
+                  <span className="flex items-center gap-1.5">
+                    <Icon name="Ship" size={14} className="text-navy-700" /> {section.quickFacts.distanceFromPort}
+                  </span>
+                  {section.quickFacts.duration && (
+                    <span className="flex items-center gap-1.5">
+                      <Icon name="Hourglass" size={14} className="text-navy-700" /> Recommended: {section.quickFacts.duration}
+                    </span>
+                  )}
+                  {section.quickFacts.transport && (
+                    <span className="flex items-center gap-1.5">
+                      <Icon name="Car" size={14} className="text-navy-700" /> {section.quickFacts.transport}
+                    </span>
+                  )}
+                </div>
+              )}
             </section>
           ))}
         </div>

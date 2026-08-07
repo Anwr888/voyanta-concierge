@@ -16,18 +16,33 @@ export const guides: GuideArticle[] = [
         body: [
           "A long, resort-lined stretch with calm, shallow water — a reliable choice for families and anyone who wants beach chairs and food within easy reach.",
         ],
+        quickFacts: {
+          distanceFromPort: "~20 min from cruise port (est.)",
+          duration: "1–2 hours",
+          transport: "Taxi or private transfer recommended",
+        },
       },
       {
         heading: "Cabbage Beach",
         body: [
           "Paradise Island's main beach, wide and lively with water sports operators at the ready. Busier by mid-morning; arrive early for a quieter stretch of sand.",
         ],
+        quickFacts: {
+          distanceFromPort: "~10 min from cruise port (est.)",
+          duration: "1–2 hours",
+          transport: "Taxi recommended (across the Paradise Island bridge)",
+        },
       },
       {
         heading: "Junkanoo Beach",
         body: [
           "The closest beach to the cruise port — walkable in under 15 minutes — with a laid-back, local bar scene. A strong pick for shorter port days.",
         ],
+        quickFacts: {
+          distanceFromPort: "~10–15 min walk from cruise port",
+          duration: "1–2 hours",
+          transport: "Walking distance",
+        },
       },
     ],
     tips: [
