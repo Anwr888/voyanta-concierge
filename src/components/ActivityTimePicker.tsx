@@ -26,28 +26,44 @@ export function ActivityTimePicker({ value, onChange }: { value: string; onChang
 
   useEffect(() => {
     if (!open) return;
+    // Scrolling the list itself to reveal the current selection fires its
+    // own (async) scroll event — it must not be mistaken for the page
+    // scrolling out from under the panel below.
     selectedRef.current?.scrollIntoView({ block: "nearest" });
 
-    function onPointerDown(e: MouseEvent) {
-      const target = e.target as Node;
-      if (buttonRef.current?.contains(target) || panelRef.current?.contains(target)) return;
+    function isInsideTrigger(target: Node) {
+      return !!buttonRef.current?.contains(target) || !!panelRef.current?.contains(target);
+    }
+    // pointerdown, not click: it fires before the button's own onClick, so
+    // this only ever sees clicks that land outside the picker entirely —
+    // the click that opened it never reaches this listener.
+    function onPointerDown(e: PointerEvent) {
+      if (isInsideTrigger(e.target as Node)) return;
       setOpen(false);
     }
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
     }
-    function onScrollOrResize() {
+    // Scrolling *inside* the options list (a wheel gesture, or the
+    // scrollIntoView above) must keep the picker open — only a scroll of
+    // the page or some other ancestor, which would leave the fixed-position
+    // panel visually stranded away from its trigger, should close it.
+    function onScroll(e: Event) {
+      if (panelRef.current?.contains(e.target as Node)) return;
       setOpen(false);
     }
-    document.addEventListener("mousedown", onPointerDown);
+    function onResize() {
+      setOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown, true);
     document.addEventListener("keydown", onKeyDown);
-    window.addEventListener("scroll", onScrollOrResize, true);
-    window.addEventListener("resize", onScrollOrResize);
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", onResize);
     return () => {
-      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("pointerdown", onPointerDown, true);
       document.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("scroll", onScrollOrResize, true);
-      window.removeEventListener("resize", onScrollOrResize);
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", onResize);
     };
   }, [open]);
 
@@ -56,7 +72,14 @@ export function ActivityTimePicker({ value, onChange }: { value: string; onChang
       <button
         ref={buttonRef}
         type="button"
-        onClick={() => (open ? setOpen(false) : openPicker())}
+        draggable={false}
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (open) setOpen(false);
+          else openPicker();
+        }}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label="Activity time"
@@ -72,6 +95,9 @@ export function ActivityTimePicker({ value, onChange }: { value: string; onChang
             ref={panelRef}
             role="listbox"
             aria-label="Choose a time"
+            draggable={false}
+            onPointerDown={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
             style={{ position: "fixed", top: coords.top, left: coords.left, minWidth: coords.width }}
             className="z-[70] max-h-60 overflow-y-auto rounded-xl border border-navy-900/10 bg-white p-1 shadow-xl shadow-navy-950/15"
           >
@@ -81,8 +107,12 @@ export function ActivityTimePicker({ value, onChange }: { value: string; onChang
                 ref={t === value ? selectedRef : undefined}
                 type="button"
                 role="option"
+                draggable={false}
                 aria-selected={t === value}
-                onClick={() => {
+                onPointerDown={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
                   onChange(t);
                   setOpen(false);
                 }}
